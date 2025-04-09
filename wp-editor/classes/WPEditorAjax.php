@@ -116,23 +116,28 @@ class WPEditorAjax {
 				$real_file = preg_replace('#^phar://#i', '', $real_file); 
 				if ( file_exists( $real_file ) ) {
 
-					if ( is_writable( $real_file ) ) {
+					if ( WPEditorBrowser::allowed_files(dirname($real_file), basename($real_file)) && ( WPEditorBrowser::is_theme_path($real_file) || WPEditorBrowser::is_plugin_path($real_file)) ) {
 
-						// phpcs:ignore HM.Security.ValidatedSanitizedInput.InputNotSanitized, (per WP Core editor)
-						$new_content = wp_unslash( $_POST['new_content'] );
-						if ( file_get_contents( $real_file ) === $new_content ) {
-							WPEditorLog::log( '[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Contents are the same" );
+						if ( is_writable( $real_file ) ) {
+
+							// phpcs:ignore HM.Security.ValidatedSanitizedInput.InputNotSanitized, (per WP Core editor)
+							$new_content = wp_unslash( $_POST['new_content'] );
+							if ( file_get_contents( $real_file ) === $new_content ) {
+								WPEditorLog::log( '[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Contents are the same" );
+							}
+							else {
+								$f = fopen( $real_file, 'w+' );
+								fwrite( $f, $new_content );
+								fclose( $f );
+								WPEditorLog::log( '[' . basename(__FILE__) . ' - line ' . __LINE__ . "] just wrote to $real_file" );
+							}
 						}
 						else {
-							$f = fopen( $real_file, 'w+' );
-							fwrite( $f, $new_content );
-							fclose( $f );
-							WPEditorLog::log( '[' . basename(__FILE__) . ' - line ' . __LINE__ . "] just wrote to $real_file" );
+							$error = __( 'This file is not writable', 'wp-editor' );
 						}
-
 					}
 					else {
-						$error = __( 'This file is not writable', 'wp-editor' );
+						$error = __( 'This file path is not writable or file extension not allowed', 'wp-editor' );
 					}
 
 				}

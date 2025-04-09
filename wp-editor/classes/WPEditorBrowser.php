@@ -252,7 +252,7 @@ class WPEditorBrowser {
       if ( ! is_dir( $complete_directory ) ) {
         mkdir( $complete_directory, 0777, true );
       }
-      
+
       if ( $_FILES["file-0"]["error"] > 0 ) {
         $error_message = __( 'Return Code', 'wp-editor' ) . ": " . $_FILES["file-0"]["error"];
       }
@@ -395,7 +395,7 @@ class WPEditorBrowser {
   }
   
   public static function download_file( $file_path, $type ) {
-    if ( ( $type == 'theme' && current_user_can( 'edit_themes' ) ) || ( $type == 'plugin' && current_user_can( 'edit_plugins' ) ) ) {
+    if ( self::allowed_files(dirname($file_path), basename($file_path)) && ( $type == 'theme' && current_user_can( 'edit_themes' ) && self::is_theme_path($file_path) ) || ( $type == 'plugin' && current_user_can( 'edit_plugins' ) && self::is_plugin_path($file_path)) ) {
       $slash = '/';
       if ( WPWINDOWS ) {
         $slash = '\\';
@@ -516,4 +516,28 @@ class WPEditorBrowser {
     }
   }
   
+  public static function is_theme_path($file_path) {
+    // Get the WordPress theme root directory
+    $theme_root = get_theme_root();
+    
+    // Normalize paths for comparison
+    $theme_root = wp_normalize_path($theme_root);
+    $file_path = wp_normalize_path($file_path);
+    
+    // Check if the file path starts with the theme root path
+    return strpos($file_path, $theme_root) === 0;
+  }
+
+ public static function is_plugin_path($file_path) {
+    // Get the WordPress plugin root directory
+    $plugin_root = WP_PLUGIN_DIR;
+  
+    // Normalize paths for comparison
+    $plugin_root = wp_normalize_path($plugin_root);
+    $file_path = wp_normalize_path($file_path);
+  
+    // Check if the file path starts with the plugin root path
+    return strpos($file_path, $plugin_root) === 0;
+  }
+
 }

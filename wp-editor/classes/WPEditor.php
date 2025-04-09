@@ -131,6 +131,9 @@ class WPEditor {
 	}
 
 	public function init() {
+		// Define the WP Editor version number
+		define( 'WPEDITOR_VERSION_NUMBER', $this->wpe_version_number() );
+
 		// Load all additional required classes
 		$this->loadCoreModels();
 
@@ -243,42 +246,42 @@ class WPEditor {
 		wp_deregister_script( 'quicktags' );
 		wp_register_script( 'quicktags', WPEDITOR_URL . '/js/quicktags.js', false, WPEDITOR_VERSION_NUMBER, true );
 		wp_localize_script( 'quicktags', 'quicktagsL10n', array(
-			'closeAllOpenTags'		=> __( 'Close all open tags', 'wp-editor' ),
-			'closeTags'				=> __( 'close tags', 'wp-editor' ),
-			'enterURL'				=> __( 'Enter the URL', 'wp-editor' ),
-			'enterImageURL'			=> __( 'Enter the URL of the image', 'wp-editor' ),
-			'enterImageDescription'	=> __( 'Enter a description of the image', 'wp-editor' ),
-			'textdirection'			=> __( 'text direction', 'wp-editor' ),
-			'toggleTextdirection'	=> __( 'Toggle Editor Text Direction', 'wp-editor' ),
-			'dfw'					=> __( 'Distraction-free writing mode', 'wp-editor' ),
-			'strong'				=> __( 'Bold', 'wp-editor' ),
-			'strongClose'			=> __( 'Close bold tag', 'wp-editor' ),
-			'em'					=> __( 'Italic', 'wp-editor' ),
-			'emClose'				=> __( 'Close italic tag', 'wp-editor' ),
-			'link'					=> __( 'Insert link', 'wp-editor' ),
-			'blockquote'			=> __( 'Blockquote', 'wp-editor' ),
-			'blockquoteClose'		=> __( 'Close blockquote tag', 'wp-editor' ),
-			'del'					=> __( 'Deleted text (strikethrough)', 'wp-editor' ),
-			'delClose'				=> __( 'Close deleted text tag', 'wp-editor' ),
-			'ins'					=> __( 'Inserted text', 'wp-editor' ),
-			'insClose'				=> __( 'Close inserted text tag', 'wp-editor' ),
-			'image'					=> __( 'Insert image', 'wp-editor' ),
-			'ul'					=> __( 'Bulleted list', 'wp-editor' ),
-			'ulClose'				=> __( 'Close bulleted list tag', 'wp-editor' ),
-			'ol'					=> __( 'Numbered list', 'wp-editor' ),
-			'olClose'				=> __( 'Close numbered list tag', 'wp-editor' ),
-			'li'					=> __( 'List item', 'wp-editor' ),
-			'liClose'				=> __( 'Close list item tag', 'wp-editor' ),
-			'code'					=> __( 'Code', 'wp-editor' ),
-			'codeClose'				=> __( 'Close code tag', 'wp-editor' ),
-			'more'					=> __( 'Insert Read More tag', 'wp-editor' ),
+			'closeAllOpenTags'      => __( 'Close all open tags', 'wp-editor' ),
+			'closeTags'             => __( 'close tags', 'wp-editor' ),
+			'enterURL'              => __( 'Enter the URL', 'wp-editor' ),
+			'enterImageURL'         => __( 'Enter the URL of the image', 'wp-editor' ),
+			'enterImageDescription' => __( 'Enter a description of the image', 'wp-editor' ),
+			'textdirection'         => __( 'text direction', 'wp-editor' ),
+			'toggleTextdirection'   => __( 'Toggle Editor Text Direction', 'wp-editor' ),
+			'dfw'                   => __( 'Distraction-free writing mode', 'wp-editor' ),
+			'strong'                => __( 'Bold', 'wp-editor' ),
+			'strongClose'           => __( 'Close bold tag', 'wp-editor' ),
+			'em'                    => __( 'Italic', 'wp-editor' ),
+			'emClose'               => __( 'Close italic tag', 'wp-editor' ),
+			'link'                  => __( 'Insert link', 'wp-editor' ),
+			'blockquote'            => __( 'Blockquote', 'wp-editor' ),
+			'blockquoteClose'       => __( 'Close blockquote tag', 'wp-editor' ),
+			'del'                   => __( 'Deleted text (strikethrough)', 'wp-editor' ),
+			'delClose'              => __( 'Close deleted text tag', 'wp-editor' ),
+			'ins'                   => __( 'Inserted text', 'wp-editor' ),
+			'insClose'              => __( 'Close inserted text tag', 'wp-editor' ),
+			'image'                 => __( 'Insert image', 'wp-editor' ),
+			'ul'                    => __( 'Bulleted list', 'wp-editor' ),
+			'ulClose'               => __( 'Close bulleted list tag', 'wp-editor' ),
+			'ol'                    => __( 'Numbered list', 'wp-editor' ),
+			'olClose'               => __( 'Close numbered list tag', 'wp-editor' ),
+			'li'                    => __( 'List item', 'wp-editor' ),
+			'liClose'               => __( 'Close list item tag', 'wp-editor' ),
+			'code'                  => __( 'Code', 'wp-editor' ),
+			'codeClose'             => __( 'Close code tag', 'wp-editor' ),
+			'more'                  => __( 'Insert Read More tag', 'wp-editor' ),
 		) );
 		wp_register_script( 'wpeditor', WPEDITOR_URL . 'js/wpeditor.js', false, WPEDITOR_VERSION_NUMBER );
 		wp_localize_script( 'wpeditor', 'WPE', array(
-            'wp_editor_ajax_nonce_ajax_folders_themes'	=> wp_create_nonce( 'wp_editor_ajax_nonce_ajax_folders_themes' ),
-            'wp_editor_ajax_nonce_ajax_folders_plugins'	=> wp_create_nonce( 'wp_editor_ajax_nonce_ajax_folders_plugins' ),
-            'wp_editor_ajax_nonce_save_files_themes'	=> wp_create_nonce( 'wp_editor_ajax_nonce_save_files_themes' ),
-            'wp_editor_ajax_nonce_save_files_plugins'	=> wp_create_nonce( 'wp_editor_ajax_nonce_save_files_plugins' )
+            'wp_editor_ajax_nonce_ajax_folders_themes'  => wp_create_nonce( 'wp_editor_ajax_nonce_ajax_folders_themes' ),
+            'wp_editor_ajax_nonce_ajax_folders_plugins' => wp_create_nonce( 'wp_editor_ajax_nonce_ajax_folders_plugins' ),
+            'wp_editor_ajax_nonce_save_files_themes'    => wp_create_nonce( 'wp_editor_ajax_nonce_save_files_themes' ),
+            'wp_editor_ajax_nonce_save_files_plugins'   => wp_create_nonce( 'wp_editor_ajax_nonce_save_files_plugins' )
 		) );
 		wp_register_script( 'wp-editor-posts-jquery', WPEDITOR_URL . 'js/posts-jquery.js', false, WPEDITOR_VERSION_NUMBER, true );
 		wp_register_script( 'nivo-lightbox', WPEDITOR_URL . 'extensions/nivo-lightbox/js/nivo-lightbox.min.js', array( 'jquery' ), WPEDITOR_VERSION_NUMBER );
@@ -337,4 +340,11 @@ class WPEditor {
 		return $links;
 	}
 
+	public function wpe_version_number() {
+		if ( ! function_exists( 'get_plugin_data' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		}
+		$plugin_data = get_plugin_data( WPEDITOR_PATH . '/wpeditor.php' );
+		return $plugin_data['Version'];
+	}
 }

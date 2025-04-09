@@ -3,7 +3,7 @@
 Plugin Name: WP Editor
 Plugin URI: http://wpeditor.net
 Description: This plugin modifies the default behavior of the WordPress plugin and theme editors.
-Version: 1.2.9.1
+Version: 1.2.9.2
 Requires at least: 3.9
 Author: Benjamin Rojas
 Author URI: http://benjaminrojas.net
@@ -57,9 +57,6 @@ if ( ! class_exists( 'WPEditor' ) ) {
 	define( 'WPEDITOR_PATH', WP_PLUGIN_DIR . '/' . basename( dirname( $plugin_file ) ) . '/' );
 	define( 'WPEDITOR_URL', plugin_dir_url( WPEDITOR_PATH ) . basename( dirname( $plugin_file ) ) . '/' );
 	
-	// Define the WP Editor version number
-	define( 'WPEDITOR_VERSION_NUMBER', wpe_version_number() );
-	
 	// IS_ADMIN is true when the dashboard or the administration panels are displayed
 	if ( ! defined( 'IS_ADMIN' ) ) {
 		define( 'IS_ADMIN',  is_admin() );
@@ -71,8 +68,9 @@ if ( ! class_exists( 'WPEditor' ) ) {
 	}
 	
 	define( 'WPWINDOWS', $windows );
-	
-	load_plugin_textdomain( 'wp-editor', false, '/' . basename(dirname(__FILE__)) . '/languages/' );
+
+	// Load translations.
+	add_action( 'init', 'wpe_load_translations' );
 	
 	// Load the main WP Editor class
 	require_once( WPEDITOR_PATH . 'classes/WPEditor.php' );
@@ -93,6 +91,10 @@ if ( ! class_exists( 'WPEditor' ) ) {
 	add_filter( 'plugin_action_links', 'wpe_settings_link', 10, 2 );
 }
 
+function wpe_load_translations() {
+	load_plugin_textdomain( 'wp-editor', false, '/' . basename(dirname(__FILE__)) . '/languages/' );
+}
+
 function wpe_settings_link( $links, $file ) {
 	$thisFile = plugin_basename( WPEDITOR_PATH ) . '/' . basename( __FILE__ );
 	if ( $file == $thisFile ) {
@@ -100,11 +102,4 @@ function wpe_settings_link( $links, $file ) {
 		array_unshift( $links, $settings );
 	}
 	return $links;
-}
-function wpe_version_number() {
-	if ( ! function_exists( 'get_plugin_data' ) ) {
-		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-	}
-	$plugin_data = get_plugin_data( WPEDITOR_PATH . '/wpeditor.php' );
-	return $plugin_data['Version'];
 }
