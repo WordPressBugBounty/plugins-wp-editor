@@ -58,6 +58,10 @@ class WPEditorPlugins {
     $real_file = WP_PLUGIN_DIR . '/' . $plugin;
     
     if ( isset( $_POST['new-content'] ) && file_exists( $real_file ) && is_writable( $real_file ) ) {
+      // Verify nonce to prevent CSRF attacks - nonce must match the file being edited
+      if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'edit-plugin_' . $real_file ) ) {
+        wp_die( __( 'Security check failed. Please refresh the page and try again.', 'wp-editor' ) );
+      }
       $new_content = stripslashes( $_POST['new-content'] );
       if ( file_get_contents( $real_file ) === $new_content ) {
         WPEditorLog::log( '[' . basename(__FILE__) . ' - line ' . __LINE__ . "] Contents are the same" );

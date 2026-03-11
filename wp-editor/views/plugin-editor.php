@@ -112,7 +112,7 @@
 	</div>
 	
 	<form name="template" id="template_form" action="" method="post" class="ajax-editor-update" style="float:left width:auto;overflow:hidden;position:relative;">
-		<?php wp_nonce_field( 'edit-plugin_' . esc_attr( $data['real_file'] )); ?>
+		<?php wp_nonce_field( 'edit-plugin_' . esc_attr( $data['real_file'] ), '_wpnonce' ); ?>
 		<div>
 			<textarea cols="70" rows="25" name="new-content" id="new-content" tabindex="1"><?php echo esc_html( $data['content'] ); ?></textarea>
 			<input type="hidden" name="action" value="save_files" />
